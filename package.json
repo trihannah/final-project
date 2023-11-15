@@ -3,19 +3,42 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "next dev",
+    "lint": "next lint",
+    "migrate": "ley --require tsm",
+    "start": "next start"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.1",
+    "@types/node": "^20.8.7",
+    "autoprefixer": "^10.4.16",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "ley": "^0.8.1",
     "next": "13.5.6",
+    "postcss": "^8.4.31",
+    "postgres": "^3.4.1",
     "react": "^18",
+    "react-calendar-heatmap": "^1.9.0",
     "react-dom": "^18",
     "sass": "^1.69.4",
-    "sharp": "^0.32.6"
+    "secure-json-parse": "^2.7.0",
+    "server-only": "^0.0.1",
+    "sharp": "^0.32.6",
+    "tsm": "^2.3.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "tailwindcss": "^3.3.3"
+    "@types/react": "^18.2.31",
+    "@types/react-calendar-heatmap": "^1.6.6",
+    "@types/react-dom": "^18.2.14",
+    "daisyui": "^3.9.3",
+    "eslint-config-upleveled": "^5.1.4",
+    "stylelint": "^15.11.0",
+    "stylelint-config-upleveled": "^1.0.2",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.2.2"
   }
 }
