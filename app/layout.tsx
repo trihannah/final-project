@@ -1,5 +1,6 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
+import Head from 'next/head';
 import React from 'react';
 import Header from './header/header';
 
@@ -18,9 +19,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />{' '}
-        {/* This is the header that checks the session and renders appropriate links */}
-        {children}
+        <Header /> {children}
       </body>
     </html>
   );

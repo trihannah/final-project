@@ -1,4 +1,3 @@
-// app\landingPage.tsx
 'use client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -7,8 +6,8 @@ import React, { useEffect, useState } from 'react';
 const LandingPageContent: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const router = useRouter();
-  const titleClass = 'text-6xl mb-4 font-bold'; // Larger, bold title
-  const subTitleClass = 'text-2xl font-semibold mt-4'; // Subtitle styling
+  const titleClass = 'text-6xl mb-4 font-bold';
+  const subTitleClass = 'text-2xl font-semibold mt-4';
   const handleDashboardClick = () => {
     router.push(`/dashboard/[username]`);
   };
@@ -18,7 +17,7 @@ const LandingPageContent: React.FC = () => {
         const response = await fetch('/api/user');
         if (response.ok) {
           const data = await response.json();
-          setIsLoggedIn(!!data.user); // Set based on user data
+          setIsLoggedIn(!!data.user);
         } else {
           setIsLoggedIn(false);
         }

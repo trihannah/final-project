@@ -1,48 +1,46 @@
-// app/api/userProgress/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import {
   createProgress,
+  deleteProgress,
   getAggregatedUserProgress,
   getUserProgress,
+  getUserProgressByHabitId,
   UserProgress,
 } from '../../../database/userProgress';
 
-// Define types for your response bodies
 type UserProgressResponseBodyGet = {
-  progress?: UserProgress[]; // Use UserProgress[] for GET response
+  progress?: UserProgress[];
   error?: string;
 };
 
 type UserProgressResponseBodyPost = {
-  progress?: UserProgress; // Use UserProgress for POST response
+  progress?: UserProgress;
   error?: string;
 };
 
-// Handle GET requests
 export async function GET(
   req: NextRequest,
 ): Promise<NextResponse<UserProgressResponseBodyGet>> {
   try {
     const url = new URL(req.url);
     const heatmap = url.searchParams.get('heatmap') === 'true';
+    const habitId = url.searchParams.get('habitId');
 
     let progress;
 
     if (heatmap) {
       // Fetch aggregated data for heatmap
-      // This would involve writing a new function in your database layer
-      // that performs an SQL query to aggregate the progress data by date.
-      progress = await getAggregatedUserProgress(); // Implement this function
+      progress = await getAggregatedUserProgress();
+    } else if (habitId) {
+      // Fetch journal entries for a specific habit
+      progress = await getUserProgressByHabitId(parseInt(habitId));
     } else {
-      // Fetch regular user progress data
       progress = await getUserProgress();
     }
 
     return new NextResponse(JSON.stringify({ progress }), {
       status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     return new NextResponse(
@@ -52,7 +50,6 @@ export async function GET(
   }
 }
 
-// Handle POST requests
 export async function POST(
   req: NextRequest,
 ): Promise<NextResponse<UserProgressResponseBodyPost>> {

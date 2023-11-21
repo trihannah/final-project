@@ -1,38 +1,76 @@
 // app/api/habits/[habitId]/route.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import {
   deleteHabitById,
   getHabitById,
+  Habit,
   updateHabitById,
 } from '../../../../database/habits';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const { habitId } = req.query;
+type HabitResponseBody = {
+  habit?: Habit;
+  error?: string;
+};
 
-  if (req.method === 'GET') {
-    const habit = await getHabitById(Number(habitId));
-    if (habit) {
-      res.status(200).json(habit);
-    } else {
-      res.status(404).end(`Habit not found`);
-    }
-  } else if (req.method === 'PUT') {
-    const { habitName, habitDescription, frequency } = req.body;
-    const habit = await updateHabitById(
-      Number(habitId),
-      habitName,
-      habitDescription,
-      frequency,
+// Function to handle GET requests
+export async function GET(
+  request: NextRequest,
+): Promise<NextResponse<HabitResponseBody>> {
+  const habitId = request.nextUrl.pathname.split('/').pop();
+
+  if (!habitId) {
+    return NextResponse.json(
+      { error: 'Habit ID is required' },
+      { status: 400 },
     );
-    res.status(200).json(habit);
-  } else if (req.method === 'DELETE') {
-    const habit = await deleteHabitById(Number(habitId));
-    res.status(200).json(habit);
-  } else {
-    res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
+
+  const habit = await getHabitById(Number(habitId));
+  return habit
+    ? NextResponse.json({ habit })
+    : NextResponse.json({ error: 'Habit not found' }, { status: 404 });
+}
+
+// Function to handle DELETE requests
+export async function DELETE(
+  request: NextRequest,
+): Promise<NextResponse<null>> {
+  const habitId = request.nextUrl.pathname.split('/').pop();
+
+  if (!habitId) {
+    return new NextResponse(JSON.stringify({ error: 'Habit ID is required' }), {
+      status: 400,
+    });
+  }
+
+  await deleteHabitById(Number(habitId));
+  return new NextResponse(null, { status: 204 });
+}
+
+// Function to handle PUT requests
+export async function PUT(
+  request: NextRequest,
+): Promise<NextResponse<HabitResponseBody>> {
+  const habitId = request.nextUrl.pathname.split('/').pop();
+
+  if (!habitId) {
+    return NextResponse.json(
+      { error: 'Habit ID is required' },
+      { status: 400 },
+    );
+  }
+
+  const body = await request.json();
+  const { habitName, habitDescription, frequency } = body;
+
+  const updatedHabit = await updateHabitById(
+    Number(habitId),
+    habitName,
+    habitDescription,
+    frequency,
+  );
+
+  return updatedHabit
+    ? NextResponse.json({ habit: updatedHabit })
+    : NextResponse.json({ error: 'Failed to update habit' }, { status: 500 });
 }

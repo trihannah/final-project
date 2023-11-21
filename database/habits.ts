@@ -8,18 +8,23 @@ export type Habit = {
   habitName: string;
   habitDescription: string;
   frequency?: 'daily' | 'weekly' | 'monthly' | null;
-  completedDates: string[];
+  creationDate: Date;
+  completedDates: (string | null)[];
 };
 
-// Cache the result of the getHabits function
 export const getHabits = cache(async () => {
   const habits = await sql<Habit[]>`
-    SELECT * FROM habits
+    SELECT h.*, array_agg(up.progress_date) as completedDates
+    FROM habits h
+    LEFT JOIN user_progress up ON h.habit_id = up.habit_id
+    GROUP BY h.habit_id
   `;
-  return habits;
+  return habits.map((habit) => ({
+    ...habit,
+    completedDates: habit.completedDates.filter((date) => date != null),
+  }));
 });
 
-// Cache the result of the getUserHabits function
 export const getUserHabits = cache(async (user_id: number) => {
   const habits = await sql<Habit[]>`
     SELECT * FROM habits WHERE user_id = ${user_id}
@@ -27,7 +32,6 @@ export const getUserHabits = cache(async (user_id: number) => {
   return habits;
 });
 
-// Cache the result of the getHabitById function
 export const getHabitById = cache(async (habit_id: number) => {
   const [habit] = await sql<Habit[]>`
     SELECT * FROM habits WHERE habit_id = ${habit_id}
@@ -35,7 +39,6 @@ export const getHabitById = cache(async (habit_id: number) => {
   return habit;
 });
 
-// Cache the result of the createHabit function
 export const createHabit = cache(
   async (
     userId: number,
@@ -48,20 +51,17 @@ export const createHabit = cache(
       VALUES (${userId}, ${habitName}, ${habitDescription}, ${frequency})
       RETURNING *
     `;
-
     return habit;
   },
 );
 
-// Cache the result of the deleteHabitById function
-export const deleteHabitById = cache(async (habit_id: number) => {
+export const deleteHabitById = async (habit_id: number) => {
   const [habit] = await sql<Habit[]>`
     DELETE FROM habits WHERE habit_id = ${habit_id} RETURNING *
   `;
   return habit;
-});
+};
 
-// Cache the result of the updateHabitById function
 export const updateHabitById = cache(
   async (
     habitId: number,

@@ -1,18 +1,27 @@
-// app/api/userProgress/[progressId]/route.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { deleteUserProgressById } from '../../../../database/userProgress';
+import { NextRequest, NextResponse } from 'next/server';
+import { deleteProgress } from '../../../../database/userProgress';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const { progressId } = req.query;
+export async function DELETE(req: NextRequest): Promise<NextResponse<null>> {
+  try {
+    const progressId = req.nextUrl.pathname.split('/').pop();
 
-  if (req.method === 'DELETE') {
-    const progress = await deleteUserProgressById(Number(progressId));
-    res.status(200).json(progress);
-  } else {
-    res.setHeader('Allow', ['DELETE']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    if (!progressId) {
+      return new NextResponse(
+        JSON.stringify({ error: 'Progress ID is required' }),
+        { status: 400 },
+      );
+    }
+
+    // delete the journal entry from database
+    await deleteProgress(parseInt(progressId));
+
+    return new NextResponse(null, {
+      status: 204,
+    });
+  } catch (error) {
+    return new NextResponse(
+      JSON.stringify({ error: 'Failed to delete progress' }),
+      { status: 500 },
+    );
   }
 }

@@ -22,6 +22,16 @@ export const getUserProgress = cache(async () => {
   return progress;
 });
 
+export const getUserProgressByHabitId = cache(
+  async (habitId: number): Promise<UserProgress[]> => {
+    const progress = await sql<UserProgress[]>`
+    SELECT * FROM user_progress
+    WHERE habit_id = ${habitId}
+  `;
+    return progress;
+  },
+);
+
 export const createProgress = async (
   user_id: number,
   habit_id: number,
@@ -42,6 +52,13 @@ export const deleteUserProgressById = cache(async (progress_id: number) => {
   `;
   return progress;
 });
+
+export const deleteProgress = async (progressId: number): Promise<void> => {
+  await sql`
+    DELETE FROM user_progress
+    WHERE progress_id = ${progressId}
+  `;
+};
 
 export const getAggregatedUserProgress = cache(
   async (): Promise<AggregatedUserProgress[]> => {

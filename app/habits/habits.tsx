@@ -39,7 +39,6 @@ function Habits() {
         console.log('Fetched habits data:', habitsData.habits);
         setHabits(habitsData.habits);
       } catch (catchError: unknown) {
-        // Changed to catchError for consistency
         if (catchError instanceof Error) {
           console.error('Error caught in handleAddHabit:', catchError);
           setError({
@@ -77,7 +76,6 @@ function Habits() {
           setError({ message: 'Could not get user information' });
         }
       } catch (catchError: unknown) {
-        // Renamed to catchError
         if (catchError instanceof Error) {
           setError({
             message: catchError.message || 'Failed to fetch user data',
@@ -140,12 +138,30 @@ function Habits() {
     }
   };
 
+  const handleDeleteHabit = async (habitId: number) => {
+    try {
+      const response = await fetch(`/api/habits/${habitId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete habit');
+      }
+      // remove deleted habit from state
+      setHabits(habits.filter((habit) => habit.habitId !== habitId));
+    } catch (catchError: unknown) {
+      if (catchError instanceof Error) {
+        console.error('Error caught in handleDeleteHabit:', catchError);
+        setError({ message: catchError.message || 'Failed to delete habit' });
+      }
+    }
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Failed to load: {error.message}</div>;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-3xl font-bold text-black mb-6">My Habits</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen p-7 ">
+      <h1 className="text-3xl font-bold text-black mb-6 mt-23">My Habits</h1>
       <button
         onClick={() => setIsModalOpen(true)}
         className="px-4 py-2 rounded bg-green-500 hover:bg-green-600 text-white mb-8 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
@@ -156,15 +172,23 @@ function Habits() {
         {habits.map((habit) => (
           <li
             key={`habit-${habit.habitId}`}
-            className="bg-white p-6 rounded-lg shadow-md"
+            className="bg-white p-6 rounded-lg shadow-md flex justify-between items-start"
           >
-            <h3 className="text-xl font-semibold text-black">
-              {habit.habitName}
-            </h3>
-            <p className="text-gray-700">{habit.habitDescription}</p>
-            <p className="text-sm text-green-700">
-              Frequency: {habit.frequency || 'Not specified'}
-            </p>
+            <div>
+              <h3 className="text-xl font-semibold text-black">
+                {habit.habitName}
+              </h3>
+              <p className="text-gray-700">{habit.habitDescription}</p>
+              <p className="text-sm text-green-700">
+                Frequency: {habit.frequency || 'Not specified'}
+              </p>
+            </div>
+            <button
+              onClick={() => handleDeleteHabit(habit.habitId)}
+              className="px-3 py-1 rounded bg-red-400 hover:bg-red-500 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>

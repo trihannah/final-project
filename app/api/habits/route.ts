@@ -12,12 +12,10 @@ type HabitCreateResponseBody = {
   error?: string;
 };
 
-// Handle GET requests
 export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<HabitsResponseBody>> {
   try {
-    // Authenticate the user
     const sessionTokenCookie = request.cookies.get('sessionToken');
     if (!sessionTokenCookie) {
       return NextResponse.json(
@@ -36,7 +34,6 @@ export async function GET(
       );
     }
 
-    // Fetch habits associated with the authenticated user
     const habits = await getUserHabits(session.userId);
     return NextResponse.json({ habits });
   } catch (error) {
@@ -47,12 +44,10 @@ export async function GET(
   }
 }
 
-// Handle POST requests
 export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<HabitCreateResponseBody>> {
   try {
-    // Authenticate the user
     const sessionTokenCookie = request.cookies.get('sessionToken');
     if (!sessionTokenCookie) {
       return NextResponse.json(
@@ -71,14 +66,14 @@ export async function POST(
       );
     }
 
-    // Extract the user id from the session
+    // user id from the session
     const userId = session.userId;
 
     // Parse the request body to get the habit data
     const body = await request.json();
     const { habitName, habitDescription, frequency } = body;
 
-    // Server-side validation for required fields
+    // validation for required fields
     if (!habitName || !habitDescription) {
       return NextResponse.json(
         { error: 'Habit name and description are required.' },
@@ -86,24 +81,12 @@ export async function POST(
       );
     }
 
-    // Check if frequency is provided and trim it if it is
-    const trimmedFrequency = frequency ? frequency.trim() : '';
-
-    // Call createHabit with each argument
     const habit = await createHabit(
       userId,
-      habitName.trim(),
-      habitDescription.trim(),
-      trimmedFrequency,
+      habitName,
+      habitDescription,
+      frequency,
     );
-
-    if (!habit) {
-      return NextResponse.json(
-        { error: 'Failed to create habit' },
-        { status: 500 },
-      );
-    }
-
     return NextResponse.json({ habit }, { status: 201 });
   } catch (error) {
     console.error(error);

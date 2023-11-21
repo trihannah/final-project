@@ -1,14 +1,13 @@
-// app\page.tsx
 import React from 'react';
 import LandingPageContent from './landingPage';
 
 export default function LandingPage() {
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Dynamic Left Section */}
+      {/* left Side */}
       <LandingPageContent />
 
-      {/* Static Right Section */}
+      {/* right Side */}
       <div className="w-1/2 bg-blue-500 p-12 flex flex-col justify-center items-center relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900 opacity-60" />
         <img

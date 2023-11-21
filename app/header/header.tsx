@@ -1,4 +1,3 @@
-// app\header\header.tsx
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { getValidSessionByToken } from '../../database/sessions';
@@ -14,7 +13,7 @@ export default function Header() {
     <header className="bg-olive-300 text-white p-4 fixed w-full z-50">
       <nav className="container mx-auto flex items-center justify-between">
         <Link href="/" className="font-bold text-2xl hover:text-gray-600">
-          LOGO
+          <img src="/images/logo.png" alt="LOGO" className="h-16 md:h-20" />
         </Link>
 
         <UserStatus session={session} />
