@@ -17,9 +17,7 @@ export default function LandingPage() {
         />
         <h2 className="text-7xl text-white mb-4 z-10">GreenHabit</h2>
         <p className="text-white text-lg z-10">
-          Lorem ipsum dolor sit amet, consetetur
-          <br />
-          sadipscing elitr, sed diam nonumy eirmod.
+          Turn Small Habits into Big Change.
         </p>
       </div>
     </div>
