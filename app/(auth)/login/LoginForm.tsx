@@ -15,26 +15,43 @@ export default function LoginForm(props: Props) {
   async function handleRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-    const data: LoginResponseBodyPost = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-    if ('errors' in data) {
-      setErrors(data.errors);
-      return;
+      if (response.headers.get('Content-Type')?.includes('application/json')) {
+        const data: LoginResponseBodyPost = await response.json();
+
+        if ('errors' in data) {
+          setErrors(data.errors);
+          return;
+        }
+
+        router.push(
+          getSafeReturnToPath(props.returnTo) ||
+            `/dashboard/${data.user.username}`,
+        );
+
+        router.refresh();
+      } else {
+        throw new Error('Response was not in JSON format');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrors([{ message: 'Login failed. Please try again.' }]);
     }
-
-    router.push(
-      getSafeReturnToPath(props.returnTo) || `/dashboard/${data.user.username}`,
-    );
-
-    router.refresh();
   }
 
   return (

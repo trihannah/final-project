@@ -23,6 +23,7 @@ export type LoginResponseBodyPost =
 export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<LoginResponseBodyPost>> {
+  console.log('Login attempt:', request);
   // Task: Implement the user login workflow
 
   // 5. Return the logged in user
@@ -34,6 +35,7 @@ export async function POST(
   const result = loginSchema.safeParse(body);
 
   if (!result.success) {
+    console.error('Login validation failed:', result.error.issues);
     return NextResponse.json(
       { errors: result.error.issues },
       {
@@ -48,6 +50,7 @@ export async function POST(
   );
 
   if (!userWithPasswordHash) {
+    console.error('User not found:', result.data.username);
     return NextResponse.json(
       { errors: [{ message: 'username or password not valid' }] },
       { status: 403 },
@@ -61,6 +64,7 @@ export async function POST(
   );
 
   if (!isPasswordValid) {
+    console.error('Invalid password for user:', result.data.username);
     return NextResponse.json(
       { errors: [{ message: 'username or password not valid' }] },
       {
@@ -86,6 +90,8 @@ export async function POST(
       },
     );
   }
+
+  console.log('Successful login for user:', userWithPasswordHash.username);
 
   // 6. Send the new cookie in the headers
 
