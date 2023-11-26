@@ -11,6 +11,7 @@ declare module globalThis {
 
 function connectOneTimeToDatabase() {
   if (!('postgresSqlClient' in globalThis)) {
+    console.log('Connecting to PostgreSQL database');
     globalThis.postgresSqlClient = postgres({
       ssl: Boolean(process.env.POSTGRES_URL),
       transform: {
@@ -38,9 +39,9 @@ function connectOneTimeToDatabase() {
     ...sqlParameters: Parameters<typeof globalThis.postgresSqlClient>
   ) => {
     headers();
+    console.log('Executing SQL query:', sqlParameters[0]);
     return globalThis.postgresSqlClient(...sqlParameters);
   }) as typeof globalThis.postgresSqlClient;
 }
 
-// connect to PostgreSQL
 export const sql = connectOneTimeToDatabase();

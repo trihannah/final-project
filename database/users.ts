@@ -42,15 +42,22 @@ export const getUserByUsername = cache(async (username: string) => {
 
 export const getUserWithPasswordHashByUsername = cache(
   async (username: string) => {
-    const [user] = await sql<UserWithPasswordHash[]>`
-    SELECT
-      *
-    FROM
-      users
-    WHERE
-      username = ${username.toLowerCase()}
-  `;
-    return user;
+    console.log('Getting user with password hash by username:', username);
+    try {
+      const [user] = await sql<UserWithPasswordHash[]>`
+        SELECT
+          *
+        FROM
+          users
+        WHERE
+          username = ${username.toLowerCase()}
+      `;
+      console.log('User found:', user);
+      return user;
+    } catch (error) {
+      console.error('Error in getUserWithPasswordHashByUsername:', error);
+      throw error;
+    }
   },
 );
 

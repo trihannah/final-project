@@ -57,11 +57,16 @@ export async function POST(
     );
   }
 
+  console.log('User found:', userWithPasswordHash.username);
+  console.log('Password Hash from DB:', userWithPasswordHash.passwordHash);
+
   // 4. Validate the user password by comparing with hashed password
   const isPasswordValid = await bcrypt.compare(
     result.data.password,
     userWithPasswordHash.passwordHash,
   );
+
+  console.log('Password comparison result:', isPasswordValid);
 
   if (!isPasswordValid) {
     console.error('Invalid password for user:', result.data.username);

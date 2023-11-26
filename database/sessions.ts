@@ -12,6 +12,8 @@ export const deleteExpiredSessions = cache(async () => {
 });
 
 export const createSession = cache(async (userId: number, token: string) => {
+  console.log(`Creating session for user ID: ${userId}`);
+
   const [session] = await sql<Session[]>`
       INSERT INTO sessions
         (user_id, token)
@@ -25,6 +27,7 @@ export const createSession = cache(async (userId: number, token: string) => {
 
   await deleteExpiredSessions();
 
+  console.log(`Session created: ${JSON.stringify(session)}`);
   return session;
 });
 
