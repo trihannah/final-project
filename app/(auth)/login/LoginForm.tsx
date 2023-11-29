@@ -61,7 +61,7 @@ export default function LoginForm(props: Props) {
         className="flex flex-col justify-between p-4 max-w-md w-full mx-4 my-10 bg-white shadow-md rounded"
         style={{ minHeight: '40vh' }}
       >
-        <div className="flex-grow space-y-10">
+        <div className="flex-grow space-y-10 mt-2 mb-2">
           {' '}
           {/* Increase space-y-6 for more space and flex-grow to push the button down */}
           <label className="font-bold mb-2">
@@ -71,7 +71,7 @@ export default function LoginForm(props: Props) {
               onChange={(event) => setUsername(event.currentTarget.value)}
             />
           </label>
-          <label className="font-bold mb-2">
+          <label className="font-bold mb-2 mt-2">
             Password
             <input
               type="password"
@@ -92,7 +92,7 @@ export default function LoginForm(props: Props) {
         <div>
           {' '}
           {/* This div remains unchanged, holding the button at the bottom */}
-          <button className="bg-green-700 text-white font-bold py-2 px-4 rounded hover:bg-green-900 transition-colors w-full">
+          <button className="bg-custom-green text-white font-bold py-2 px-4 mb-4 rounded hover:bg-green-900 transition-colors w-full">
             Login
           </button>
         </div>

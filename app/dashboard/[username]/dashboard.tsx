@@ -349,49 +349,53 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 pt-12 mt-24 mb-20">
+    <div className="container mx-auto p-4 mt-6 mb-20">
       <div className="relative">
-        {/* Heatmap */}
-        <CalendarHeatmap
-          startDate={startDate}
-          endDate={endDate}
-          values={heatmapData}
-          classForValue={(value) => {
-            if (!value || value.count === 0) {
-              return 'color-scale-0';
-            }
-            if (value.count === 1) {
-              return 'color-scale-1';
-            }
-            if (value.count === 2) {
-              return 'color-scale-2';
-            }
-            return 'color-scale-3';
-          }}
-        />
-
-        <div className="absolute bottom-0 right-0 p-12">
-          <span className="text-6xl font-bold text-custom-green">
+        {/* Recent Activity */}
+        <div className="mb-10 mt-8 p-6 bg-lavender-300 rounded-3xl shadow">
+          <h2 className="text-2xl font-semibold text-green-800">
+            Recent Activity
+          </h2>
+          {renderRecentJournalEntries()}
+        </div>{' '}
+        {/* Slogan as Headline */}
+        <div className="mt-10 p-6">
+          <span className="text-4xl md:text-5xl  text-custom-green tracking-wide leading-tight">
             Make Your Year Greener
           </span>
         </div>
+        {/* Heatmap Container */}
+        <div className="flex mb-10">
+          {/* Heatmap */}
+          <div className="flex-1">
+            {' '}
+            {/* Takes up full width now */}
+            <CalendarHeatmap
+              startDate={startDate}
+              endDate={endDate}
+              values={heatmapData}
+              classForValue={(value) => {
+                if (!value || value.count === 0) {
+                  return 'color-scale-0';
+                }
+                if (value.count === 1) {
+                  return 'color-scale-1';
+                }
+                if (value.count === 2) {
+                  return 'color-scale-2';
+                }
+                return 'color-scale-3';
+              }}
+            />
+          </div>
+        </div>
       </div>
-
-      {/* Recent Journal Entries Section */}
-      <div className="mb-4 mt-10 p-4 bg-yellow-300 rounded-lg shadow">
-        <h2 className="text-xl font-semibold text-green-800">
-          Recent Activity
-        </h2>
-        {renderRecentJournalEntries()}
-      </div>
-
       <div className="flex justify-between items-center m-10">
         <h1 className="text-2xl font-bold">Your Habits</h1>
         <Link href="/habits" className="btn btn-primary">
-          Go to Habits
+          Manage Habits
         </Link>
       </div>
-
       {/* List of Habits */}
       <div className="space-y-4">
         {habits.map((habit) => (
@@ -412,18 +416,19 @@ const Dashboard = () => {
             </div>
 
             {expandedHabit === habit.habitId && (
-              <div className="flex flex-col md:flex-row mt-2 w-full md:max-w-6xl h-64">
-                <div className="flex-1">
+              <div className="flex flex-row mt-2 w-full border-t pt-2">
+                {/* Habit Details Section */}
+                <div className="flex-1 pr-2 border-r">
                   <p className="text-gray-600">{habit.habitDescription}</p>
                   <p className="text-gray-500">
                     Frequency: {habit.frequency || 'Not specified'}
                   </p>
                 </div>
 
-                <div className="bg-yellow-100 rounded p-4 ml-4 w-120">
-                  {/* Journal Entry Section */}
+                {/* Journal Entry Section */}
+                <div className="flex-1 pl-2">
                   <textarea
-                    className="textarea textarea-bordered w-full bg-white"
+                    className="textarea textarea-bordered w-full h-32 bg-white"
                     placeholder="Write your journal entry here..."
                     value={currentJournalEntry[habit.habitId] || ''}
                     onChange={(e) =>
@@ -433,15 +438,16 @@ const Dashboard = () => {
                       })
                     }
                   />
-                  <div className="flex justify-between mt-6">
+                  <div className="flex justify-between mt-4">
                     <button
-                      className="bg-custom-beige hover:bg-green-600 text-stone-300 font-bold py-1 px-2 text-sm rounded-full mt-24"
+                      className="bg-custom-green hover:bg-transparent text-white font-semibold hover:text-custom-green py-2 px-4 text-lg border border-transparent hover:border-custom-green rounded-2xl ml-5"
                       onClick={() => handleJournalSubmit(habit.habitId)}
                     >
                       Submit Entry
                     </button>
+
                     <button
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 text-sm rounded-full mt-24"
+                      className="bg-transparent hover:bg-custom-green text-custom-green font-semibold hover:text-white py-2 px-4 text-lg border border-custom-green hover:border-transparent rounded-2xl mr-5"
                       onClick={() => openJournalModal(habit)}
                     >
                       View Journal Entries

@@ -20,8 +20,10 @@ export default async function LoginPage({ searchParams }: Props) {
   // 4. If the sessionToken cookie is invalid or doesn't exist, show the login form
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-custom-beige to-gray-200">
-      {' '}
+    <div
+      className="flex justify-center items-center min-h-screen bg-gradient-to-tr from-custom-beige to-gray-200"
+      style={{ paddingTop: '30px' }}
+    >
       <LoginForm returnTo={searchParams.returnTo} />
     </div>
   );

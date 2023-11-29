@@ -10,7 +10,7 @@ export default function Header() {
     : null;
 
   return (
-    <header className="bg-olive-300 text-white p-4 fixed w-full z-50">
+    <header className=" text-white p-2 w-full z-50">
       <nav className="container mx-auto flex items-center justify-between">
         <Link href="/" className="font-bold text-2xl hover:text-gray-600">
           <img src="/images/logo.png" alt="LOGO" className="h-16 md:h-20" />

@@ -161,10 +161,10 @@ function Habits() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-7 ">
-      <h1 className="text-3xl font-bold text-black mb-6 mt-23">My Habits</h1>
+      <h1 className="text-3xl font-bold text-black mb-6 mt-14">My Habits</h1>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 rounded bg-green-500 hover:bg-green-600 text-white mb-8 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
+        className="bg-transparent hover:bg-custom-green text-custom-green font-semibold hover:text-white py-2 px-4 text-lg border border-custom-green hover:border-transparent rounded-2xl mb-14"
       >
         Add New Habit
       </button>
@@ -183,12 +183,20 @@ function Habits() {
                 Frequency: {habit.frequency || 'Not specified'}
               </p>
             </div>
-            <button
-              onClick={() => handleDeleteHabit(habit.habitId)}
-              className="px-3 py-1 rounded bg-red-400 hover:bg-red-500 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50"
-            >
-              Delete
-            </button>
+            <div className="flex flex-col items-center space-y-2">
+              <button
+                onClick={() => handleDeleteHabit(habit.habitId)}
+                className="px-3 py-1 rounded-xl bg-red-400 hover:bg-red-500 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50"
+              >
+                Delete
+              </button>
+              <button
+                // Add functionality
+                className="px-3 py-1 rounded-xl bg-blue-300 hover:bg-blue-500 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 pl-5 pr-5"
+              >
+                Edit
+              </button>
+            </div>
           </li>
         ))}
       </ul>
@@ -282,7 +290,7 @@ function Habits() {
 
               {/* Submit Button */}
               <div className="text-center">
-                <button className="px-4 py-2 rounded bg-green-500 hover:bg-green-600 text-white focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50">
+                <button className="px-4 py-2 bg-transparent hover:bg-custom-green text-custom-green font-semibold hover:text-white text-lg border border-custom-green hover:border-transparent rounded-2xl mr-5">
                   Add Habit
                 </button>
               </div>
